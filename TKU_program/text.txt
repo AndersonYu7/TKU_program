@@ -1,0 +1,3 @@
+Students will learn how to use strtok from 
+this exercise, please note that, upload your
+program before deadline.

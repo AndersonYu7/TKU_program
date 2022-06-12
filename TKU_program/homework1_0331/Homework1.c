@@ -39,7 +39,7 @@ int main()
     fprintf(fp,"\nAnswer\t\t");
     for(int i=0;i<question_num;i++) fprintf(fp,"%2c ",right_ans[i]);
     fprintf(fp,"\n\n\nID\tScore(%%)\n");
-    for(int i=0;i<student_num;i++) fprintf(fp,"%d\t%.0f\n",student_ID[i],((20.0-student_wrong[i])/20)*100);
+    for(int i=0;i<student_num;i++) fprintf(fp,"%d\t%.0f\n",student_ID[i],student_score[i]);
     fprintf(fp,"\n\nQuestion\t");
     for(int i=0;i<question_num;i++) fprintf(fp,"%2d ",i+1);
     fprintf(fp,"\nAnswer\t\t");
@@ -53,7 +53,7 @@ int main()
 void fgetAnswers(void)
 {
     FILE *inp;
-    inp = fopen("examdat.TXT","r");
+    inp = fopen("examdat.txt","r");
 
     fscanf(inp,"%d",&total);
     fscanf(inp,"%s",right_ans);
