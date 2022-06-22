@@ -1,4 +1,5 @@
 //char strcat(char *s1, const *s2)
+// 後面那個不會有變化
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +11,8 @@ void main()
     char b[10] = " HI";
 
     strcat(a,b);
-    puts(a);
-    puts(b);
+    puts(a);    //test HI
+    puts(b);    // HI
 
 
     system("pause");

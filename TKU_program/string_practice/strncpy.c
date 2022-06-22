@@ -11,15 +11,15 @@ void main()
     char b[10] = "Andersonyu";
 
     strncpy(a,b,3);
-    puts(a);
-    puts(b);
+    puts(a);    //Anda
+    puts(b);    //AndersonyuAnd
     
     char c[10];
     char d[10] = "Andersonyu";
 
     strncpy(c,&d[5],3);     //son
-    puts(c);
-    puts(d);
+    puts(c);    //son
+    puts(d);    //Andersonyuson
 
     
     system("pause");

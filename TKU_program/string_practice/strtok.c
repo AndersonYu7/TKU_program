@@ -9,11 +9,14 @@ void main()
     char a[] = "This is a sentence with 7 tokens";
 
     char *tokenptr = strtok(a, " ");
+    puts(tokenptr);
+    tokenptr = strtok(NULL, " ");
+    puts(tokenptr);
 
-    while(tokenptr != NULL){
-        puts(tokenptr);
-        tokenptr = strtok(NULL, " ");
-    }
+    // while(tokenptr != NULL){
+    //     puts(tokenptr);
+    //     tokenptr = strtok(NULL, " ");
+    // }
     
     
     system("pause");
