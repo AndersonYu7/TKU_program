@@ -1,31 +1,88 @@
-#include<stdio.h>
 #include <stdlib.h>
-#define COMPARE(a,b) ((a)>(b) ? 1:(a)<(b) ? -1:0)
+#include <stdio.h>
+
 #define MAX_TERMS 101
 
-typedef struct{
-    int expon;
+typedef struct 
+{
     float coef;
+    int expon;
 }polynomial;
 
 polynomial terms[MAX_TERMS];
-int avail=0;
+int avail = 0;
 
-void attach(float coeff,int exp);
-void PRINT(polynomial a[],int start,int max);
+int COMPARE(int a, int b)
+{
+    if(a>b) return 1;
+    else if(a == b) return 0;
+    else return -1;
+}
+
+void attach(float coefficient, int exponent)
+{
+    if(avail >= MAX_TERMS){
+        fprintf(stderr, "Too many terms in the polynomial\n");
+        exit(EXIT_FAILURE);
+    }
+
+    terms[avail].coef = coefficient;
+    terms[avail++].expon = exponent;
+}
+
+void padd(int starta, int finisha, int startb, int finishb, int *startd, int *finishd)
+{
+    avail = finishb + 1;
+    float coefficient;
+    *startd = avail;
+    while(starta <= finisha && startb <= finishb){
+        switch(COMPARE(terms[starta].expon, terms[startb].expon)){
+            case -1:    //expon_a < expon_b
+                attach(terms[startb].coef, terms[startb].expon);
+                startb++;
+                break;
+
+            case 0:     //expon_a == expon_b
+                coefficient = terms[starta].coef + terms[startb].coef;
+
+                if(coefficient)
+                    attach(coefficient, terms[starta].expon);
+                    starta++;
+                    startb++;
+                    break;
+
+            case 1:     //expon_a > expon_b
+                attach(terms[starta].coef, terms[starta].expon);
+                starta++;
+                break;
+        }
+    }
+
+    for(; starta <= finisha; starta++)  //add in remaining terms of A(x)
+        attach(terms[starta].coef, terms[starta].expon);
+
+    for(; startb <= finishb; startb++)  //add in remaining terms of B(x)
+        attach(terms[startb].coef, terms[startb].expon);
+
+    *finishd = avail - 1;
+}
+
+void print_poly(polynomial terms[], int start, int finish)
+{
+    for(int i=start;i<=finish;i++){
+        if(i!=start){
+            if(!terms[i].expon)
+                printf(" + %.f", terms[i].coef);
+            else 
+                printf(" + %.fX^%d", terms[i].coef, terms[i].expon);
+        } else
+            printf("%.fX^%d", terms[i].coef, terms[i].expon);
+    }
+    puts("");
+}
 
 int main()
 {
-    int starta=0;
-    int finisha=1;
-    int startb=2;
-    int finishb=5;
-    int startd;
-    int finishd;
-    float coefficient;
-    avail = finishb+1;
-    startd = avail;
-
     terms[0].expon=1000;
     terms[0].coef=2.0;
     terms[1].expon=0;
@@ -39,53 +96,17 @@ int main()
     terms[5].expon=0;
     terms[5].coef=1.0;
 
-    while(starta <= finisha && startb <= finishb)
-        switch(COMPARE(terms[starta].expon,
-                       terms[startb].expon))
-        {
-            case -1: //a expon < b expon
-                    attach(terms[startb].coef,terms[startb].expon);
-                    startb++;
-                    break;
-            case  0: //equal expon
-                    coefficient = terms[starta].coef +
-                                  terms[startb].coef;
-                    if(coefficient)
-                        attach(coefficient,terms[starta].expon);
-                    starta++;
-                    startb++;
-                    break;
-            case  1: //a expoon > b expon
-                    attach(terms[starta].coef,terms[starta].expon);
-                    starta++;
-        }
-        //add in remaining terms of A(x)
-        for(; starta <= finisha; starta++)
-            attach(terms[starta].coef,terms[starta].expon);
-        //add in remaining terms of B(x)
-        for(; startb <= finishb; startb++)
-            attach(terms[startb].coef,terms[startb].expon);
+    int startd;
+    int finishd;
 
-        finishd = avail - 1;
+    padd(0, 1, 2, 5, &startd, &finishd);
 
-        PRINT(terms, startd, finishd);
     puts("");
-}
-void attach(float coeff,int exp)
-{
-    if(avail >= MAX_TERMS){
-        fprintf(stderr,"Too many terms in the poly\n");
-        exit(1);
-    }
-    terms[avail].coef = coeff;
-    terms[avail++].expon = exp;
-
-}
-void PRINT(polynomial a[],int start,int max)
-{
-    if(max >= MAX_TERMS) exit(1);
-    for(int i=start;i<=max;i++){
-          if(a[i].coef) printf("%.fX^%d ",a[i].coef,a[i].expon);
-    }
-    puts("");
+    printf("A(X): ");
+    print_poly(terms, 0, 1);
+    printf("B(X): ");
+    print_poly(terms, 2, 5);
+    printf("D(X): ");
+    print_poly(terms, startd, finishd);
+    return 0;
 }

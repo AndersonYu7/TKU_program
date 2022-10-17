@@ -5,6 +5,8 @@
 #define False 0
 #define True 1
 
+#define COMPARE(a,b) ((a)>(b) ? 1:(a)<(b) ? -1:0)
+
 typedef struct 
 {
     int degree;
@@ -22,7 +24,7 @@ polynomal zero()
 
 int IsZero(polynomal poly)
 {
-    if(poly.degree == 0) return True;
+    if(poly.degree < 0) return True;
     else return False;
 }
 
@@ -36,18 +38,10 @@ int Coef(polynomal poly, int degree)
     return poly.coef[degree];
 }
 
-int COMPARE(int degree_1, int degree_2)
-{
-    if(degree_1 > degree_2) return 1;
-    else if(degree_1 < degree_2) return -1;
-    else return 0;
-}
-
 polynomal Attach(polynomal poly, float coef, int expon)
 {
-    if(poly.coef[expon])
-        poly.coef[expon] = coef;
 
+    if(!poly.coef[expon]) poly.coef[expon] = coef;
     return poly;
 }
 
@@ -61,6 +55,7 @@ polynomal Remove(polynomal poly, int expon)
         }
         i--;
     }
+    poly.coef[expon] = 0;
     return poly;
 }
 
@@ -73,6 +68,8 @@ void print_poly(polynomal poly)
                 else printf(" + %.fx^%d ",poly.coef[i], i);
             }
             else printf("%.fx^%d",poly.coef[i], i);
+
+
         }
     }
 }
@@ -84,18 +81,26 @@ int main(void)
     a = zero();
     b = zero();
 
-    a.degree = 3;
+    a.degree = 100;
     b.degree = 2;
 
+    a.coef[100] = 20;
     a.coef[3] = 6;
     a.coef[1] = 3;
     a.coef[0] = 1;
 
-    b.coef[2] = 2;
+    b.coef[2] = 5;
     b.coef[1] = 4;
+
+    printf("A: ");
+    print_poly(a);
+    puts("");
+    printf("B: ");
+    print_poly(b);
+    puts("");
     
     float sum = 0;
-    while(!IsZero(a) && !IsZero(b)){ //ok
+    while(!IsZero(a) && !IsZero(b)){
         switch (COMPARE(LeadExp(a), LeadExp(b))){
             case -1:
                 d = Attach(d, Coef(b, LeadExp(b)), LeadExp(b));
@@ -118,26 +123,26 @@ int main(void)
                 break;
         }
     }
-    while(a.coef[LeadExp(a)]){
+
+    while(a.coef[LeadExp(a)] && LeadExp(a)>=0){     //add in remaining terms of A(x)
         d = Attach(d, Coef(a, LeadExp(a)), LeadExp(a));
         a = Remove(a, LeadExp(a));
     }
 
-    while(b.coef[LeadExp(b)]){
+    while(b.coef[LeadExp(b)] && LeadExp(b)>=0){     //add in remaining terms of B(x)
         d = Attach(d, Coef(b, LeadExp(b)), LeadExp(b));
         b = Remove(b, LeadExp(b));
     }
-    for(int i=MAX_DEGREE-1;i>=0;i--){
+
+    for(int i=MAX_DEGREE-1;i>=0;i--){   //find the d.degree
         if(d.coef[i]!=0){
             d.degree = i;
             break;
         }
     }
 
+    printf("D: ");
     print_poly(d);
-
-    printf("%d\n", d.degree);
-    for(int i=0;i<d.degree;i++) printf("%.f\t", d.coef[i]);
 
     return 0;
 }
