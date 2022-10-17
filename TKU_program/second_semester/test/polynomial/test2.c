@@ -5,6 +5,8 @@
 #define False 0
 #define True 1
 
+#define COMPARE(a,b) ((a)>(b) ? 1:(a)<(b) ? -1:0)
+
 typedef struct 
 {
     int degree;
@@ -36,18 +38,10 @@ int Coef(polynomal poly, int degree)
     return poly.coef[degree];
 }
 
-int COMPARE(int degree_1, int degree_2)
+polynomal Attach(polynomal poly, int coef, int expon)
 {
-    if(degree_1 > degree_2) return 1;
-    else if(degree_1 < degree_2) return -1;
-    else return 0;
-}
 
-polynomal Attach(polynomal poly, float coef, int expon)
-{
-    if(poly.coef[expon])
-        poly.coef[expon] = coef;
-
+    if(!poly.coef[expon]) poly.coef[expon] = coef;
     return poly;
 }
 
@@ -61,6 +55,7 @@ polynomal Remove(polynomal poly, int expon)
         }
         i--;
     }
+    poly.coef[expon] = 0;
     return poly;
 }
 
@@ -91,7 +86,7 @@ int main(void)
     a.coef[1] = 3;
     a.coef[0] = 1;
 
-    b.coef[2] = 2;
+    b.coef[2] = 5;
     b.coef[1] = 4;
     
     float sum = 0;
@@ -135,9 +130,6 @@ int main(void)
     }
 
     print_poly(d);
-
-    printf("%d\n", d.degree);
-    for(int i=0;i<d.degree;i++) printf("%.f\t", d.coef[i]);
 
     return 0;
 }
