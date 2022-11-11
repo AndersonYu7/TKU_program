@@ -34,6 +34,8 @@ int main()
     printf("The memory address of the first element in X is: %p\n", &x[0][0]);
     printf("The content of X[1] is: %p\n", x[1]);
     printf("The memory address of first element in second row of X is %p\n", &x[1][0]);
+    printf("The content of X[2] is: %p\n", x[2]);
+    printf("The memory address of first element in third row of X is %p\n", &x[2][0]);
     
     for(int i=0;i<row;i++){
         for(int j=0;j<col;j++){

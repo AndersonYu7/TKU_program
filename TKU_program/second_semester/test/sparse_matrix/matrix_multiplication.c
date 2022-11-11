@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #define MAX_terms 101
+#define COMPARE(a, b) ((a)>(b)? 1:(a)<(b)? -1:0)
 
 typedef struct 
 {
@@ -63,13 +64,6 @@ void storesum(term d[], int *totald, int row, int col, int *sum)
     }
 }
 
-int COMPARE(int a, int b)
-{
-    if(a > b) return 1;
-    else if(a == b) return 0;
-    else return -1;
-} 
-
 void mmult(term a[], term b[], term d[])
 {
     int column, totald = 0;
@@ -87,7 +81,7 @@ void mmult(term a[], term b[], term d[])
     print_matrix(new_b); 
 
     a[a[0].value+1].row = a[0].row;
-    new_b[b[0].value+1].col = b[0].col;
+    new_b[b[0].value+1].row = b[0].col;
     new_b[b[0].value+1].col= 0;
 
     for(int i=1;i<=a[0].value;){
