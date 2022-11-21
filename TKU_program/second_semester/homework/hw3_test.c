@@ -101,7 +101,7 @@ stack_ptr postfix(stack_ptr input)
 
 stack_ptr reverse(stack_ptr top)
 {
-    stack_ptr out;
+    stack_ptr out = NULL;
     for(;top;top->link){        //將輸入的東西 反向給input stack ex 1 + 2 -> 2 + 1
         char item2 = pop(&top); //用意為在pop時需要從前面的輸入開始pop 不反過來會變成從最後一個輸入開始
         push(&out, item2);
@@ -124,15 +124,13 @@ int main()
     }
 
     stack_ptr input = NULL;
-    for(;top;top->link){        //將輸入的東西 反向給input stack ex 1 + 2 -> 2 + 1
-        char item2 = pop(&top); //用意為在pop時需要從前面的輸入開始pop 不反過來會變成從最後一個輸入開始
-        push(&input, item2);
-    }
-    //input = reverse(top);
-    printStackNode(input);
-
+    stack_ptr top2 = NULL;
     stack_ptr output = NULL;
-    output = postfix(input);
+
+    input = reverse(top);   //讓輸入的stack反過來 因為需要先進先出
+    printStackNode(input);
+    top2 = postfix(input);
+    output = reverse(top2); //同理 所以將output反過來
     printStackNode(output);
 
     return 0;
