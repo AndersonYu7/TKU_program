@@ -109,6 +109,60 @@ stack_ptr reverse(stack_ptr top)
     return out;
 }
 
+char ans(stack_ptr input)    //問題點: 可能會超過9所以 數字需要改為int 以及 改用queue
+{
+    printStackNode(input);
+    char op1, op2, operator, ans = 0;
+    stack_ptr temp = NULL;
+    for(;input;input->link){
+        if(get_token(input)==operand){
+            char item = pop(&input);
+            push(&temp, item);
+        } else{
+            printStackNode(input);
+            op2 = pop(&temp);
+            op1 = pop(&temp);
+            precedence token = get_token(input);
+            char i = pop(&input);
+            //push(&input, i);
+            printStackNode(input);
+            printf("%d\n", token);
+            printf("%c %c\n", op1, op2);
+            
+            switch (token){
+                case plus:
+                    ans = op1 + op2 - '0';
+                    break;
+                case minus:
+                    ans = op1 - op2 + '0';
+                    break;
+                case times:
+                    ans = op1 * op2 / '0';
+                    break;
+                case divide:
+                    ans = op1 / op2 * '0';
+                    break;
+                case mod:
+                    ans = op1 % op2 + '0';
+                    break;
+            }
+            push(&input, ans);
+            printStackNode(input);
+            printf("done\n");
+            if(temp){
+                for(;temp;temp->link){
+                    char item2 = pop(&temp);
+                    push(&input, item2);
+                }
+            }   
+            if((input->link->link)==NULL) break;
+        }
+    }
+    printStackNode(input);
+    // printf("%p", input->link);
+    return input->item;
+}
+
 int main()
 {
     stack_ptr top;
@@ -127,11 +181,15 @@ int main()
     stack_ptr top2 = NULL;
     stack_ptr output = NULL;
 
-    input = reverse(top);   //讓輸入的stack反過來 因為需要先進先出
+    input = reverse(top);   //讓輸入的stack反過來 因為需要先進先出 懶得用queue
     printStackNode(input);
     top2 = postfix(input);
+    push(&top2, ' ');
     output = reverse(top2); //同理 所以將output反過來
     printStackNode(output);
+
+    char Ans = ans(output);
+    printf("%c", Ans);
 
     return 0;
 }
