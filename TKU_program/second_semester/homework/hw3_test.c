@@ -1,3 +1,8 @@
+/*
+需要改成queue 因為先進先出 
+stack 改成 int data 跟 precedence type 跟 link 用意為可以計算9以上的數字
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -111,7 +116,6 @@ stack_ptr reverse(stack_ptr top)
 
 char ans(stack_ptr input)    //問題點: 可能會超過9所以 數字需要改為int 以及 改用queue
 {
-    printStackNode(input);
     char op1, op2, operator, ans = 0;
     stack_ptr temp = NULL;
     for(;input;input->link){
@@ -119,16 +123,10 @@ char ans(stack_ptr input)    //問題點: 可能會超過9所以 數字需要改
             char item = pop(&input);
             push(&temp, item);
         } else{
-            printStackNode(input);
             op2 = pop(&temp);
             op1 = pop(&temp);
             precedence token = get_token(input);
-            char i = pop(&input);
-            //push(&input, i);
-            printStackNode(input);
-            printf("%d\n", token);
-            printf("%c %c\n", op1, op2);
-            
+            pop(&input);
             switch (token){
                 case plus:
                     ans = op1 + op2 - '0';
@@ -147,8 +145,6 @@ char ans(stack_ptr input)    //問題點: 可能會超過9所以 數字需要改
                     break;
             }
             push(&input, ans);
-            printStackNode(input);
-            printf("done\n");
             if(temp){
                 for(;temp;temp->link){
                     char item2 = pop(&temp);
@@ -158,8 +154,6 @@ char ans(stack_ptr input)    //問題點: 可能會超過9所以 數字需要改
             if((input->link->link)==NULL) break;
         }
     }
-    printStackNode(input);
-    // printf("%p", input->link);
     return input->item;
 }
 
@@ -182,14 +176,12 @@ int main()
     stack_ptr output = NULL;
 
     input = reverse(top);   //讓輸入的stack反過來 因為需要先進先出 懶得用queue
-    printStackNode(input);
     top2 = postfix(input);
     push(&top2, ' ');
     output = reverse(top2); //同理 所以將output反過來
-    printStackNode(output);
 
     char Ans = ans(output);
-    printf("%c", Ans);
+    printf("The ans = %c", Ans);
 
     return 0;
 }
