@@ -62,6 +62,21 @@ char pop(stack_ptr *top)
 
 }
 
+stack_ptr input_string(FILE *fp)
+{
+    stack_ptr stdin_ = NULL, input = NULL;
+    char ch;
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+        push(&stdin_, ch);
+    }
+    for(;stdin_;stdin_->link){
+        char item = pop(&stdin_);
+        if(item!=' ') push(&input, item);
+    }
+
+    return input;
+}
+
 stack_ptr postfix(stack_ptr input)
 {
     stack_ptr output = NULL;
@@ -116,35 +131,37 @@ stack_ptr reverse(stack_ptr top)
 
 char ans(stack_ptr input)    //問題點: 可能會超過9所以 數字需要改為int 以及 改用queue
 {
-    char op1, op2, operator, ans = 0;
+    char operator;
+    int op1, op2, ans = 0;;
     stack_ptr temp = NULL;
     for(;input;input->link){
         if(get_token(input)==operand){
             char item = pop(&input);
             push(&temp, item);
         } else{
-            op2 = pop(&temp);
-            op1 = pop(&temp);
+            op2 = (int)pop(&temp) - '0';
+            op1 = (int)pop(&temp) - '0';
             precedence token = get_token(input);
             pop(&input);
             switch (token){
                 case plus:
-                    ans = op1 + op2 - '0';
+                    ans = op1 + op2;
                     break;
                 case minus:
-                    ans = op1 - op2 + '0';
+                    ans = op1 - op2;
                     break;
                 case times:
-                    ans = op1 * op2 / '0';
+                    ans = op1 * op2;
                     break;
                 case divide:
-                    ans = op1 / op2 * '0';
+                    ans = op1 / op2;
                     break;
                 case mod:
-                    ans = op1 % op2 + '0';
+                    ans = op1 % op2;
                     break;
             }
-            push(&input, ans);
+            ans = ans + '0';
+            push(&input, (char)ans);
             if(temp){
                 for(;temp;temp->link){
                     char item2 = pop(&temp);
@@ -163,19 +180,20 @@ int main()
     top = NULL;
     char item;
 
-    char c;
-    while(1){   //need space
-        scanf("%c", &item);
-        push(&top, item);
-        if((c=getchar())=='\n')
-            break;
-    }
+    // char c;
+    // while(1){   //need space
+    //     scanf("%c", &item);
+    //     push(&top, item);
+    //     if((c=getchar())=='\n')
+    //         break;
+    // }
 
     stack_ptr input = NULL;
     stack_ptr top2 = NULL;
     stack_ptr output = NULL;
 
-    input = reverse(top);   //讓輸入的stack反過來 因為需要先進先出 懶得用queue
+    // input = reverse(top);   //讓輸入的stack反過來 因為需要先進先出 懶得用queue
+    input = input_string(stdin);
     top2 = postfix(input);
     push(&top2, ' ');
     output = reverse(top2); //同理 所以將output反過來
