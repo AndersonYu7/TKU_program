@@ -45,7 +45,7 @@ void deleteNode(node_ptr *head, node_ptr *rear, int deleted_data)
         temp = temp->rlink;
     }while(temp!=*head);
 
-    printf("There is not the data that u want to delete!\n");
+    printf("There is no data that you want to delete!\n");
 
 }
 
