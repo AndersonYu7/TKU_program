@@ -49,7 +49,26 @@ void deleteNode(node_ptr *head, node_ptr *rear, int deleted_data)
 
 }
 
-void bubble_sort(node_ptr head)
+void bubble_sort_descending(node_ptr head)
+{
+    node_ptr temp_1 = head;
+    node_ptr temp_2 = head;
+
+    do{
+        while(temp_2!=temp_1){
+            if(temp_2->data < temp_1->data){
+                int data = temp_2->data;
+                temp_2->data = temp_1->data;
+                temp_1->data = data;
+            }
+            temp_2 = temp_2->rlink;
+        }
+        temp_2 = head;
+        temp_1 = temp_1->rlink;
+    }while(temp_1!=head);
+}
+
+void bubble_sort_ascending(node_ptr head)
 {
     node_ptr temp_1 = head;
     node_ptr temp_2 = head;
@@ -87,13 +106,42 @@ int main()
     node_ptr rear = head;
 
     for(int i=0;i<5;i++){
-        int data = rand()%(1 + 50 - 1) + 1; //1~20
+        int data = rand()%(1 + 50 - 1) + 1; 
         insertNode(&head, &rear, data);
     }
-
     printNode(head);
-    printf("\nAfter sorting\n");
-    bubble_sort(head);
+
+    int which_function;
+    do{
+        printf("Insert(1) or Delete(2) or Sort(3)\n");
+        scanf("%d", &which_function);
+        int insert_num;
+        int delete_num;
+        switch(which_function){
+            case 1:
+                printf("input the num u want to insert: ");
+                scanf("%d", &insert_num);
+                insertNode(&head, &rear, insert_num);
+                printNode(head);
+                break;
+            
+            case 2:
+                printf("input a number u want to delete: ");
+                scanf("%d", &delete_num);
+                deleteNode(&head, &rear, delete_num);
+                printNode(head);
+                break;
+            default: break;
+        }
+        puts("");
+    }while(which_function!=3);
+
+    printf("After sorting in ascending\n");
+    bubble_sort_ascending(head);
+    printNode(head);
+
+    printf("\nAfter sorting in descending\n");
+    bubble_sort_descending(head);
     printNode(head);
 
     return 0;
