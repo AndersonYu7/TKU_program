@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define SWAP(a, b, t) ((t)=(a), (a)=(b), (b)=(t))
+
 typedef struct node *node_ptr;
 struct node{
     int data;
@@ -49,37 +51,19 @@ void deleteNode(node_ptr *head, node_ptr *rear, int deleted_data)
 
 }
 
-void bubble_sort_descending(node_ptr head)
+void bubble_sort(node_ptr head, char as_de[])
 {
     node_ptr temp_1 = head;
     node_ptr temp_2 = head;
 
     do{
         while(temp_2!=temp_1){
-            if(temp_2->data < temp_1->data){
-                int data = temp_2->data;
-                temp_2->data = temp_1->data;
-                temp_1->data = data;
-            }
-            temp_2 = temp_2->rlink;
-        }
-        temp_2 = head;
-        temp_1 = temp_1->rlink;
-    }while(temp_1!=head);
-}
-
-void bubble_sort_ascending(node_ptr head)
-{
-    node_ptr temp_1 = head;
-    node_ptr temp_2 = head;
-
-    do{
-        while(temp_2!=temp_1){
-            if(temp_2->data > temp_1->data){
-                int data = temp_2->data;
-                temp_2->data = temp_1->data;
-                temp_1->data = data;
-            }
+            int temp;
+            if(temp_2->data > temp_1->data && as_de == "ascending") 
+                SWAP(temp_1->data, temp_2->data, temp);
+            else if(temp_2->data < temp_1->data && as_de == "descending")
+                SWAP(temp_1->data, temp_2->data, temp);
+            
             temp_2 = temp_2->rlink;
         }
         temp_2 = head;
@@ -137,11 +121,11 @@ int main()
     }while(which_function!=3);
 
     printf("After sorting in ascending\n");
-    bubble_sort_ascending(head);
+    bubble_sort(head, "ascending");
     printNode(head);
 
     printf("\nAfter sorting in descending\n");
-    bubble_sort_descending(head);
+    bubble_sort(head, "descending");
     printNode(head);
 
     return 0;
